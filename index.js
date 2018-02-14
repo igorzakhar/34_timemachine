@@ -1,5 +1,14 @@
 var TIMEOUT_IN_SECS = 3 * 60
-var TEMPLATE = '<h1><span class="js-timer-minutes">00</span>:<span class="js-timer-seconds">00</span></h1>'
+var ALERT_TIMEOUT = 30
+var TEMPLATE = '<span class="js-timer-minutes">00</span>:<span class="js-timer-seconds">00</span>'
+var MESSAGES = ["Четкая цель — первый шаг к любому достижению.", 
+"Говорят, что мотивация длится не долго. Что ж, свежесть после ванны — тоже. Поэтому заботиться о них стоит ежедневно.",
+"Поверьте, что сможете, и пол пути уже пройдено.",
+"Если вам предложили место на космическом корабле, не спрашивайте, какое место! Запрыгивайте внутрь!",
+"Почувствуйте попутный ветер в вашем парусе. Двигайтесь. Если нет ветра, беритесь за весла.",
+"Единственный способ сделать выдающуюся работу — искренне любить то, что делаешь.",
+"Если ты можешь что-то представить — ты можешь этого достичь!",
+"Осуществляйте свои мечты, или кто-то наймет вас для осуществления своих."]
 
 function padZero(number){
   return ("00" + String(number)).slice(-2);
@@ -41,6 +50,11 @@ class Timer{
     var secsGone = currentTimestamp - this.timestampOnStart
     return Math.max(this.timeout_in_secs - secsGone, 0)
   }
+  update(timeout_in_secs){
+    this.initial_timeout_in_secs = timeout_in_secs
+    this.timestampOnStart = this.getTimestampInSecs()
+    this.timeout_in_secs = this.initial_timeout_in_secs
+  }
 }
 
 class TimerWidget{
@@ -56,7 +70,15 @@ class TimerWidget{
     // adds HTML tag to current page
     this.timerContainer = document.createElement('div')
 
-    this.timerContainer.setAttribute("style", "height: 100px;")
+    this.timerContainer.setAttribute("style", 
+                                     "margin-top: 46px;"+ 
+                                     "margin-left: 22px;"+
+                                     "position: fixed;"+
+                                     "z-index: 99;"+
+                                     "background: white;"+
+                                     "font-size: 24px;"+
+                                     "color: #444;"+
+                                     "font-family: 'Fira Sans',sans-serif;");
     this.timerContainer.innerHTML = TEMPLATE
 
     rootTag.insertBefore(this.timerContainer, rootTag.firstChild)
@@ -88,9 +110,20 @@ function main(){
 
   timerWiget.mount(document.body)
 
+  function getRandomMessage(){
+    var title = document.title + "\n";
+    var index = Math.floor(Math.random() * MESSAGES.length);
+    var message = "Хватит читать " + title + MESSAGES[index] 
+    return message
+  }
+
   function handleIntervalTick(){
     var secsLeft = timer.calculateSecsLeft()
     timerWiget.update(secsLeft)
+    if (secsLeft <= 0){
+      alert(getRandomMessage())
+      timer.update(ALERT_TIMEOUT)
+    }
   }
 
   function handleVisibilityChange(){
