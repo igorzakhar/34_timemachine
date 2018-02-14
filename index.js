@@ -1,6 +1,7 @@
 var TIMEOUT_IN_SECS = 3 * 60
 var ALERT_TIMEOUT = 30
-var TEMPLATE = '<span class="js-timer-minutes">00</span>:<span class="js-timer-seconds">00</span>'
+var TEMPLATE = '<div style="border: 2px solid #d5dddf; border-radius: 3px; border-color: #77a8d0; text-align: center; width: 70px;">'+
+               '<span class="js-timer-minutes">00</span>:<span class="js-timer-seconds">00</span></div>'
 var MESSAGES = ["Четкая цель — первый шаг к любому достижению.", 
 "Говорят, что мотивация длится не долго. Что ж, свежесть после ванны — тоже. Поэтому заботиться о них стоит ежедневно.",
 "Поверьте, что сможете, и пол пути уже пройдено.",
